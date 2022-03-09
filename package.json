@@ -1,5 +1,24 @@
 {
-  "dependencies": {
-    "express": "^4.17.3"
-  }
+    "name": "bookshelf-api",
+    "version": "1.0.0",
+    "description": "API for Bookshelf UI",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "nodemon src/index.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/PabloFernandezMila/bookshelf-api.git"
+    },
+    "keywords": [],
+    "author": "Pablo Fernandez",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/PabloFernandezMila/bookshelf-api/issues"
+    },
+    "homepage": "https://github.com/PabloFernandezMila/bookshelf-api#readme",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "express": "^4.17.3"
+    }
 }
