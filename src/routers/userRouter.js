@@ -10,11 +10,18 @@ const users = [{
     avatarURL: "https://cdn-icons-png.flaticon.com/512/147/147144.png",
 }, ];
 
-//Users end-point
-
-//TODO change logic to return only the name of the user and not the whole object
-usersRouter.get("/", (request, response) => {
-    response.send(users);
+//Users name end-point
+usersRouter.get("/:id/name", (request, response) => {
+    const userID = request.params.id;
+    let userToBeReturn = null;
+    users.forEach((user) => {
+        if (user.userID == userID) {
+            userToBeReturn = user;
+        }
+    });
+    userToBeReturn !== null ?
+        response.send(userToBeReturn.userName) :
+        response.status(404).send("User not found");
 });
 
 module.exports = usersRouter;
