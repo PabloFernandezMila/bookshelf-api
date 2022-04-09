@@ -3,19 +3,24 @@ const cors = require("cors");
 const multer = require("multer");
 const { response } = require("express");
 const path = require("path");
+const bodyParser = require("body-parser");
 
 //Define the API
 const api = express();
 
 //Enable CORS
 api.use(cors());
+api.use(bodyParser.urlencoded({ extended: false }));
+api.use(bodyParser.json());
 
 //Routers
 const booksRouter = require("./routers/booksRouter");
 const usersRouter = require("./routers/userRouter");
+const authRouter = require("./routers/authRouter");
 
 api.use("/books", booksRouter);
 api.use("/users", usersRouter);
+api.use("/auth", authRouter);
 
 //Start API and listen to port 4000
 api.listen(4000);
