@@ -73,7 +73,7 @@ authRouter.post("/login", async(request, response) => {
         });
     }
 
-    //Check if password match's user entered
+    //Check if password is correct
     const isPasswordOk = await bcrypt.compare(password, existingUser.password);
     if (!isPasswordOk) {
         return response.status(400).send({
@@ -83,15 +83,12 @@ authRouter.post("/login", async(request, response) => {
 
     //Generate token
     const loginToken = jwt.sign({
-            email: existingUser.email,
+            user: existingUser.email,
         },
         JWT_SECRET
     );
 
     //Login successfully
-
-    //TODO token is not saved for following navigation
-    //TODO revisar
     response.send({
         error: null,
         message: "Login successfully",
