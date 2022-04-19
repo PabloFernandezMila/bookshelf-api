@@ -2,20 +2,10 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const authRouter = express.Router();
 const jwt = require("jsonwebtoken");
+const db = require("../configs/db");
 
 //Require keyword
 const { JWT_SECRET } = require("../middlewares/authMiddlewares");
-
-const users = [{
-        email: "hola@senpai.com",
-        password: "$2b$10$bXDwCrl6CJHORfYTOYnaJu/OlyX8fbSb82rBldhP1mxTigTOu4wP6",
-    },
-    {
-        email: "chau@senpai.com",
-        //12345678
-        password: "$2b$10$iYvmMZ.Ovp2qcDwO9oGEuO1mdxeJRwZedA.jApllJEqsKh/.s9NA2",
-    },
-];
 
 //User registration
 authRouter.post("/register", async(request, response) => {
@@ -26,8 +16,12 @@ authRouter.post("/register", async(request, response) => {
     const lastname = request.body.lastname;
     const email = request.body.email;
 
-    //TODO need the real DB
     //Search if already exist an user with the email entered
+
+    //Search if already exist an user with the email entered
+    const myQuery = await db.query("select * from users");
+    const users = myQuery.rows;
+
     const existingUser = users.find((userDB) => {
         return userDB.email === email;
     });
@@ -52,29 +46,57 @@ authRouter.post("/register", async(request, response) => {
         email: email,
         password: password,
     };
+    //Generate token
+    const loginToken = jwt.sign({
+            email: newUser.email,
+        },
+        JWT_SECRET
+    );
 
-    response.json(newUser);
+    const createUser = await db.query(
+        "INSERT INTO Users (name, lastname,email, password) values ('" +
+        newUser.name +
+        "','" +
+        newUser.lastname +
+        "', '" +
+        newUser.email +
+        "', '" +
+        newUser.password +
+        "')"
+    );
+
+    //Login successfully
+    response.send({
+        error: null,
+        message: "Register successfully",
+        token: loginToken,
+        newUser,
+    });
 });
 
 authRouter.post("/login", async(request, response) => {
     const email = request.body.email;
     const password = request.body.password;
+    let userOFDB = null;
 
-    //TODO need the real DB
     //Search if already exist an user with the email entered
-    const existingUser = users.find((userDB) => {
-        return userDB.email === email;
-    });
+    const myQuery = await db.query("select * from users");
+    const users = myQuery.rows;
 
+    users.forEach((user) => {
+        if (user.email == email) {
+            userOFDB = user;
+        }
+    });
     //Error user not found
-    if (!existingUser) {
-        return response.status(401).send({
+    if (!userOFDB) {
+        return response.status(400).send({
             error: "You have entered an invalid username or password",
         });
     }
 
     //Check if password is correct
-    const isPasswordOk = await bcrypt.compare(password, existingUser.password);
+    const isPasswordOk = await bcrypt.compare(password, userOFDB.password);
     if (!isPasswordOk) {
         return response.status(400).send({
             error: "You have entered an invalid username or password",
@@ -83,7 +105,7 @@ authRouter.post("/login", async(request, response) => {
 
     //Generate token
     const loginToken = jwt.sign({
-            user: existingUser.email,
+            email: userOFDB.email,
         },
         JWT_SECRET
     );

@@ -1,30 +1,29 @@
 const express = require("express");
 const usersRouter = express.Router();
+const db = require("../configs/db");
 
 //Users
-const users = [{
-    userID: 1,
-    userName: "Gustavo",
-    userLastname: "Rodriguez",
-    email: "Sample@gmail.com",
-    avatarURL: "https://cdn-icons-png.flaticon.com/512/147/147144.png",
-}, ];
 
 //Users name end-point
-usersRouter.get("/:id/name", (request, response) => {
-    const userID = request.params.id;
+usersRouter.get("/:email/name", async(request, response) => {
+    const userEmail = request.params.email;
     let userToBeReturn = null;
+
+    const myQuery = await db.query("select * from users");
+    const users = myQuery.rows;
+
     users.forEach((user) => {
-        if (user.userID == userID) {
+        if (user.email == userEmail) {
             userToBeReturn = user;
+            console.log(user);
         }
     });
     userToBeReturn !== null ?
         response.status(200).send({
-            userName: userToBeReturn.userName,
+            userName: userToBeReturn.name,
         }) :
         response.status(404).send({
-            message: "User not found",
+            message: "User not found " + userEmail,
         });
 });
 

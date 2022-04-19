@@ -8,6 +8,7 @@ const authMiddleware = (request, response, next) => {
     if (!token) {
         return response.status(401).send({
             error: "Access denied",
+            status: 401,
         });
     }
 
@@ -19,6 +20,7 @@ const authMiddleware = (request, response, next) => {
         //If invalid token found return 404
         return response.status(400).send({
             error: "Invalid token!",
+            status: 400,
         });
     }
 };
