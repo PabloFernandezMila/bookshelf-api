@@ -1,12 +1,12 @@
 
 --Create table Users 
 CREATE TABLE users (
-  id int [pk, increment]
-  name varchar
-  lastname varchar
-  email email
-  password password
-  wishlist int[]
+  id  SERIAL PRIMARY KEY,
+  name varchar,
+  lastname varchar,
+  email varchar,
+  password varchar,
+  wishlist int[] default {},
   library int[]
 )
 
@@ -28,16 +28,16 @@ CREATE TABLE books (
 --Create Categories 
 CREATE TABLE categories (
   id SERIAL PRIMARY KEY,
-  name VARCHAR NOT NULL
+  categoryname VARCHAR NOT NULL
 )
 
 --Add categories to Categories table
-INSERT INTO categories (id, name) VALUES
+INSERT INTO categories (id, categoryname) VALUES
 (1, 'Classics'),(2,'Fantasy'), (3,'Horror'),(4, 'Romance')
 
 
 --Add books to Books table
-INSERT INTO books (id,title,author,description,categories,cover,fullDescription) VALUES 
+INSERT INTO books (id,booktitle,bookauthor,bookdescription,bookcategory,bookbackgroundimageurl,bookfullDescription) VALUES 
 (1,
 'A Game of Thrones',
 'George R.R. Martin',
@@ -124,14 +124,14 @@ INSERT INTO books (id,title,author,description,categories,cover,fullDescription)
 'Uther, the High King, has died, leaving the infant Mordred as his only heir. His uncle, the loyal and gifted warlord Arthur.\nA village trapped in winter, a tyrannical god, and a girl who will do anything to keep her family alive.\nEver since Cora''s father disappeared through the ice, whispers about her family''s''  ''curse'' have grown increasingly louder. Desperate to help her mother and siblings survive another bleak season in the Winter King''s frozen grasp, Cora begins to bend (and even break) the rules she has kept since she was a little girl. But when she discovers a secret that''s much bigger than herself, she realizes too late that she has put herself—and those she loves—in even greater peril.')
 
 --Get all books with categories name
-SELECT B.id,B.title,B.Author, B.description,B.Cover,B.fulldescription, array_agg(C.name) 
+SELECT B.id,B.title,B.Author, B.description,B.Cover,B.fulldescription, array_agg(C.categroyname) 
 FROM books B 
 LEFT JOIN categories C 
 ON C.id = ANY(B.categories) 
 GROUP BY B.id ORDER BY id
 
 --Get a books with categories name
-SELECT B.id,B.booktitle,B.bookauthor, B.bookdescription,B.bookbackgroundimageurl,B.bookfulldescription, array_agg(C.name) 
+SELECT B.id,B.booktitle,B.bookauthor, B.bookdescription,B.bookbackgroundimageurl,B.bookfulldescription, array_agg(C.categroyname) 
 FROM books B 
 LEFT JOIN categories C 
 ON C.id = B.bookcategory WHERE B.id = 1
@@ -140,10 +140,17 @@ GROUP BY B.id ORDER BY id
 
 --Get books filter by categroy with categories name
   
-SELECT B.id,B.title,B.Author, B.description,B.Cover,B.fulldescription, array_agg(C.name) 
+SELECT B.id,B.title,B.Author, B.description,B.Cover,B.fulldescription, array_agg(C.categroyname) 
 FROM books B
 LEFT JOIN categories C
 ON C.id = ANY(B.categories)   WHERE   1=ANY(categories)
+GROUP BY B.id ORDER BY id
+
+--Get wishlist books
+SELECT B.id,B.booktitle,B.bookauthor, B.bookdescription,B.bookbackgroundimageurl,B.bookfulldescription, array_agg(C.categoryname) 
+FROM books B 
+LEFT JOIN categories C 
+ON C.id = B.bookcategory WHERE B.id in(1,8,9,21,10)
 GROUP BY B.id ORDER BY id
 
 --Update sintax	

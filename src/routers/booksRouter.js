@@ -1,9 +1,13 @@
 const express = require("express");
 const booksRouter = express.Router();
 const db = require("../configs/db");
+const {
+    authMiddleware,
+    JWT_SECRET,
+} = require("../middlewares/authMiddlewares");
 
 //Books end-point
-booksRouter.get("/", async(request, response) => {
+booksRouter.get("/", authMiddleware, async(request, response) => {
     const myQuery = await db.query("select * from books ORDER BY booktitle asc");
     const books = myQuery.rows;
     response.send(books);
@@ -36,8 +40,6 @@ booksRouter.get("/:id", async(request, response) => {
 //Books by author end-point
 booksRouter.get("/authors/:author", async(request, response) => {
     const author = request.params.author;
-    console.log(author.length);
-    console.log(author.replaceAll("%20", " "));
     let booksByAuthorToBeReturned = [];
 
     const myQuery = await db.query(
