@@ -20,11 +20,13 @@ const usersRouter = require("./routers/userRouter");
 const authRouter = require("./routers/authRouter");
 const wishListRouter = require("./routers/wishListRouter");
 const myLibraryRouter = require("./routers/myLibraryRouter");
+const searchRouter = require("./routers/searchRouter");
 
 api.use("/books", booksRouter);
 api.use("/users", usersRouter);
 api.use("/auth", authRouter);
 api.use("/wishlist", wishListRouter);
 api.use("/myLibrary", myLibraryRouter);
+api.use("/search", searchRouter);
 //Start API and listen to port 4000
 api.listen(4000);

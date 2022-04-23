@@ -9,7 +9,6 @@ const {
 
 //Get library for logged users
 myLibraryRouter.get("/:email", authMiddleware, async(request, response) => {
-    console.log("llego");
     const userEmail = request.params.email;
     const queryString =
         "Select library from Users where email = '" + userEmail + "'";
@@ -46,17 +45,13 @@ myLibraryRouter.post("/add", authMiddleware, async(request, response) => {
     const email = request.body.email;
     const id = parseInt(request.body.id);
     //Get array of library books
-    console.log("carga la lista");
     const myQuery = await db.query(
         "Select library from Users where email = '" + email + "'"
     );
 
     const libraryArray = myQuery.rows[0].library;
-    console.log("carga la lista");
     if (libraryArray) {
-        console.log("1");
         if (!libraryArray.includes(id)) {
-            console.log("2");
             const updateQuery = await db.query(
                 "UPDATE  users SET library = array_append(library," +
                 id +

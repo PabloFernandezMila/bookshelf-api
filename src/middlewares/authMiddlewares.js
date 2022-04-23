@@ -4,22 +4,21 @@ const JWT_SECRET = "Bookshelf 2022";
 const authMiddleware = (request, response, next) => {
     const token = request.header("Authorization");
 
-    //Si no nos mandan un token error 401: acceso denegado
+    //If token is not present access is denied
     if (!token) {
         return response.status(401).send({
-            error: "¡Acceso denegado!",
+            error: "Access denied!",
         });
     }
 
-    //Ver si el token es valido o no
+    //Check if token is valid
     try {
         const verify = jwt.verify(token, JWT_SECRET);
-        console.log("llego y passo");
         next();
     } catch (error) {
-        //Cuando el token no es valido 400: invalido
+        //If token is not valid return status 400
         return response.status(400).send({
-            error: "Token invalido!",
+            error: "Invalid Token!",
         });
     }
 };
