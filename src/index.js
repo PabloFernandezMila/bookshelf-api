@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 
 //Define the API
 const api = express();
+require("dotenv").config();
 
 //Enable CORS
 api.use(cors());

@@ -1,13 +1,9 @@
 const express = require("express");
 const booksRouter = express.Router();
 const db = require("../configs/db");
-const {
-    authMiddleware,
-    JWT_SECRET,
-} = require("../middlewares/authMiddlewares");
 
 //Books end-point
-booksRouter.get("/", authMiddleware, async(request, response) => {
+booksRouter.get("/", async(request, response) => {
     const myQuery = await db.query("select * from books ORDER BY booktitle asc");
     const books = myQuery.rows;
     response.send(books);
