@@ -6,7 +6,7 @@ CREATE TABLE users (
   lastname varchar,
   email varchar,
   password varchar,
-  wishlist int[] default {},
+  wishlist int[],
   library int[]
 )
 
