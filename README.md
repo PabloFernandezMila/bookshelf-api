@@ -1,6 +1,6 @@
 # Welcome to Bookshelf 3.0 API 
 
-In the following section will find the documentation API and DB.
+In the following section will find the documentation of the API and DB.
 
 All information is retrieved from the DB using endpoints of the API, so in order to work properly the API and DB must be running.
 
